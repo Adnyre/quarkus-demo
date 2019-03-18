@@ -1,13 +1,11 @@
 package adnyre.quarkusdemo.orders.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "repairorder")
-public class Order extends PanacheEntityBase {
+public class Order {
     @Id
     @SequenceGenerator(
             name = "orderSequence",
