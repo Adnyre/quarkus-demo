@@ -1,13 +1,11 @@
 package adnyre.quarkusdemo.jobs.model;
 
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Employee extends PanacheEntityBase {
+public class Employee {
     @Id
     @SequenceGenerator(
             name = "employeeSequence",

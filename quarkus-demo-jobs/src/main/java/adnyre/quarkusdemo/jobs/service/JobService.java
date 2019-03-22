@@ -1,5 +1,7 @@
 package adnyre.quarkusdemo.jobs.service;
 
+import adnyre.quarkusdemo.jobs.dao.EmployeeDao;
+import adnyre.quarkusdemo.jobs.dao.JobDao;
 import adnyre.quarkusdemo.jobs.dto.JobDto;
 import adnyre.quarkusdemo.jobs.model.Employee;
 import adnyre.quarkusdemo.jobs.model.Job;
@@ -8,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,13 +20,18 @@ public class JobService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobService.class);
 
+    @Inject
+    JobDao jobDao;
+    @Inject
+    EmployeeDao employeeDao;
+
     public JobDto getById(long id) {
-        Job job = Job.findById(id);
+        Job job = jobDao.getById(id);
         return JobDto.from(job);
     }
 
     public List<JobDto> getJobs() {
-        List<Job> jobs = Job.listAll();
+        List<Job> jobs = jobDao.getJobs();
         LOGGER.info("Found " + jobs.size() + " jobs");
         return jobs.stream()
                 .map(JobDto::from)
@@ -31,7 +39,7 @@ public class JobService {
     }
 
     public List<JobDto> getJobsByAssigneeId(long assigneeId) {
-        List<Job> jobs = Job.list("assignee.id", assigneeId);
+        List<Job> jobs = jobDao.getJobsByAssigneeId(assigneeId);
         LOGGER.info("Found " + jobs.size() + " jobs for assignee " + assigneeId);
         return jobs.stream()
                 .map(JobDto::from)
@@ -40,8 +48,8 @@ public class JobService {
 
     @Transactional
     public JobDto assign(long jobId, long assigneeId) {
-        Job job = Job.findById(jobId);
-        Employee assignee = Employee.findById(assigneeId);
+        Job job = jobDao.getById(jobId);
+        Employee assignee = employeeDao.getById(assigneeId);
         LOGGER.info("Setting assignee: " + assigneeId + " for job: " + jobId);
         assignee.getAssignedJobs().add(job);
         job.setAssignee(assignee);
@@ -51,7 +59,7 @@ public class JobService {
 
     @Transactional
     public JobDto start(long jobId) {
-        Job job = Job.findById(jobId);
+        Job job = jobDao.getById(jobId);
         LOGGER.info("Starting job: " + jobId);
         job.setStatus(JobStatus.IN_PROGRESS);
         return JobDto.from(job);
@@ -59,7 +67,7 @@ public class JobService {
 
     @Transactional
     public JobDto finish(long jobId) {
-        Job job = Job.findById(jobId);
+        Job job = jobDao.getById(jobId);
         LOGGER.info("Finishing job: " + jobId);
         job.setStatus(JobStatus.FINISHED);
         return JobDto.from(job);
@@ -68,8 +76,13 @@ public class JobService {
     @Transactional
     public JobDto save(JobDto dto) {
         Job job = dto.to();
+        if (dto.getAssignee() != null) {
+            Employee assignee = employeeDao.getById(dto.getAssignee().getId());
+            job.setAssignee(assignee);
+            assignee.getAssignedJobs().add(job);
+        }
         job.setStatus(JobStatus.UNASSIGNED);
-        job.persist();
+        jobDao.save(job);
         return JobDto.from(job);
     }
 }

@@ -1,6 +1,5 @@
 package adnyre.quarkusdemo.jobs.dto;
 
-import adnyre.quarkusdemo.jobs.model.Employee;
 import adnyre.quarkusdemo.jobs.model.Job;
 import adnyre.quarkusdemo.jobs.model.JobStatus;
 
@@ -60,11 +59,6 @@ public class JobDto {
         Job job = new Job();
         job.setId(this.id);
         job.setStatus(this.status);
-        if (this.assignee != null) {
-            Employee assigneeEntity = Employee.findById(this.assignee.getId());
-            job.setAssignee(assigneeEntity);
-            assigneeEntity.getAssignedJobs().add(job);
-        }
         job.setOrderId(this.orderId);
         return job;
     }
