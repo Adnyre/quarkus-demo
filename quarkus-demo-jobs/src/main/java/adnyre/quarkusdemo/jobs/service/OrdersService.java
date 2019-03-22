@@ -10,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @RegisterRestClient
+@Path("orders")
 public interface OrdersService {
 
     @GET
