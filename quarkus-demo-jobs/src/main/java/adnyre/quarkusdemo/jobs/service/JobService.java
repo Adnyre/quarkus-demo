@@ -3,9 +3,11 @@ package adnyre.quarkusdemo.jobs.service;
 import adnyre.quarkusdemo.jobs.dao.EmployeeDao;
 import adnyre.quarkusdemo.jobs.dao.JobDao;
 import adnyre.quarkusdemo.jobs.dto.JobDto;
+import adnyre.quarkusdemo.jobs.dto.OrderDto;
 import adnyre.quarkusdemo.jobs.model.Employee;
 import adnyre.quarkusdemo.jobs.model.Job;
 import adnyre.quarkusdemo.jobs.model.JobStatus;
+import org.eclipse.microprofile.rest.client.inject.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +26,9 @@ public class JobService {
     JobDao jobDao;
     @Inject
     EmployeeDao employeeDao;
+    @Inject
+    @RestClient
+    OrdersService ordersService;
 
     public JobDto getById(long id) {
         Job job = jobDao.getById(id);
@@ -75,6 +80,7 @@ public class JobService {
 
     @Transactional
     public JobDto save(JobDto dto) {
+        validateOrder(dto.getOrderId());
         Job job = dto.to();
         if (dto.getAssignee() != null) {
             Employee assignee = employeeDao.getById(dto.getAssignee().getId());
@@ -84,5 +90,15 @@ public class JobService {
         job.setStatus(JobStatus.UNASSIGNED);
         jobDao.save(job);
         return JobDto.from(job);
+    }
+
+    private void validateOrder(Long orderId) {
+        if (orderId == null) {
+            throw new RuntimeException("Job should have an order id");
+        }
+        OrderDto order = ordersService.get(orderId);
+        if (order == null) {
+            throw new RuntimeException("Order " + orderId + " not found");
+        }
     }
 }
