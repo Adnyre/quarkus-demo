@@ -8,7 +8,7 @@
 #
 # mvn package -Pnative -Dnative-image.docker-build=true
 #
-# docker build -f src/main/docker/Dockerfile -t quarkus-demo-orders .
+# docker build -f src/main/docker/Dockerfile -t quarkus-demo-jobs .
 #
 # sudo docker run -i --rm -p 8080:8080 -e "DATASOURCE_URL=..." -e "DATASOURCE_USERNAME=..." -e "DATASOURCE_PASSWORD=..." quarkus-demo-jobs
 #
