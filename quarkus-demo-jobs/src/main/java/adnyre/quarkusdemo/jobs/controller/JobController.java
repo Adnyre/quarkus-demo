@@ -8,9 +8,10 @@ import adnyre.quarkusdemo.jobs.service.JobService;
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("")
+@Path("/")
 public class JobController {
 
     @Inject
@@ -18,6 +19,12 @@ public class JobController {
 
     @Inject
     EmployeeService employeeService;
+
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response healthCheck() {
+        return Response.ok("Ok", MediaType.TEXT_PLAIN).build();
+    }
 
     @GET
     @Path("/jobs/{id}")
