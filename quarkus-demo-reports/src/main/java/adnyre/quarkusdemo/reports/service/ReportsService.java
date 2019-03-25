@@ -5,7 +5,7 @@ import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import java.time.YearMonth;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +21,7 @@ public class ReportsService {
     JobsService jobsService;
 
     public List<OrdersByMonth> getOrdersByMonth() {
-        List<OrderDto> orders = null;
+        List<OrderDto> orders;
         try {
             orders = ordersService.get(false);
         } catch (Exception e) {
@@ -29,20 +29,20 @@ public class ReportsService {
         }
         return orders.stream()
                 .collect(Collectors.groupingBy(
-                        order -> YearMonth.from(order.getCreatedAt())
+                        order -> LocalDate.from(order.getCreatedAt())
                 ))
                 .entrySet().stream()
                 .map(entry -> {
-                    YearMonth month = entry.getKey();
+                    LocalDate month = entry.getKey();
                     List<OrderDto> monthlyOrders = entry.getValue();
-                    return new OrdersByMonth(month, monthlyOrders.size(), monthlyOrders.stream().filter(order -> order.getProcessed()).count());
+                    return new OrdersByMonth(month, monthlyOrders.size(), monthlyOrders.stream().filter(OrderDto::getProcessed).count());
                 })
                 .sorted(Comparator.comparing(OrdersByMonth::getMonth))
                 .collect(Collectors.toList());
     }
 
     public List<JobsByEmployee> getJobsByEmployee() {
-        List<JobDto> jobs = null;
+        List<JobDto> jobs;
         try {
             jobs = jobsService.get();
         } catch (Exception e) {

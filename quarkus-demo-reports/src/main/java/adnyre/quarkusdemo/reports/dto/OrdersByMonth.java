@@ -1,9 +1,12 @@
 package adnyre.quarkusdemo.reports.dto;
 
-import java.time.YearMonth;
+import javax.json.bind.annotation.JsonbDateFormat;
+import java.time.LocalDate;
 
 public class OrdersByMonth {
-    private YearMonth month;
+
+    @JsonbDateFormat("MMMM yyyy")
+    private LocalDate month;
 
     private long orders;
 
@@ -12,17 +15,17 @@ public class OrdersByMonth {
     public OrdersByMonth() {
     }
 
-    public OrdersByMonth(YearMonth month, long orders, long unprocessedOrders) {
+    public OrdersByMonth(LocalDate month, long orders, long unprocessedOrders) {
         this.month = month;
         this.orders = orders;
         this.unprocessedOrders = unprocessedOrders;
     }
 
-    public YearMonth getMonth() {
+    public LocalDate getMonth() {
         return month;
     }
 
-    public void setMonth(YearMonth month) {
+    public void setMonth(LocalDate month) {
         this.month = month;
     }
 
