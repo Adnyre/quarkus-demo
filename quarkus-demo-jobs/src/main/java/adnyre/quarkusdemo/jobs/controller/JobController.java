@@ -34,6 +34,13 @@ public class JobController {
     }
 
     @GET
+    @Path("/jobs")
+    @Produces(MediaType.APPLICATION_JSON)
+    public List<JobDto> get() {
+        return jobService.getJobs();
+    }
+
+    @GET
     @Path("/employees/{employeeId}/jobs")
     @Produces(MediaType.APPLICATION_JSON)
     public List<JobDto> getByAssignee(@PathParam("employeeId") long employeeId) {
