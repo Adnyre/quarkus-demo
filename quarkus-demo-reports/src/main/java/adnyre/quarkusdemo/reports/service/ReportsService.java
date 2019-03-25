@@ -21,7 +21,12 @@ public class ReportsService {
     JobsService jobsService;
 
     public List<OrdersByMonth> getOrdersByMonth() {
-        List<OrderDto> orders = ordersService.get(false);
+        List<OrderDto> orders = null;
+        try {
+            orders = ordersService.get(false);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to find orders", e);
+        }
         return orders.stream()
                 .collect(Collectors.groupingBy(
                         order -> YearMonth.from(order.getCreatedAt())
@@ -37,7 +42,12 @@ public class ReportsService {
     }
 
     public List<JobsByEmployee> getJobsByEmployee() {
-        List<JobDto> jobs = jobsService.get();
+        List<JobDto> jobs = null;
+        try {
+            jobs = jobsService.get();
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to find jobs", e);
+        }
         return jobs.stream()
                 .collect(Collectors.groupingBy(
                         job -> job.getAssignee().getFullName())

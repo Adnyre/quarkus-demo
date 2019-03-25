@@ -14,7 +14,6 @@ import java.util.List;
 public interface JobsService {
 
     @GET
-    @Path("/jobs")
     @Produces(MediaType.APPLICATION_JSON)
     List<JobDto> get();
 }

@@ -96,7 +96,12 @@ public class JobService {
         if (orderId == null) {
             throw new RuntimeException("Job should have an order id");
         }
-        OrderDto order = ordersService.get(orderId);
+        OrderDto order;
+        try {
+            order = ordersService.get(orderId);
+        } catch (Exception e) {
+            throw new RuntimeException("Unable to find order by id: " + orderId, e);
+        }
         if (order == null) {
             throw new RuntimeException("Order " + orderId + " not found");
         }

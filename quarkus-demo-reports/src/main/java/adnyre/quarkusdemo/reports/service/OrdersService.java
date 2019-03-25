@@ -17,7 +17,6 @@ public interface OrdersService {
     OrderDto get(@PathParam("id") long id);
 
     @GET
-    @Path("/orders")
     @Produces(MediaType.APPLICATION_JSON)
     List<OrderDto> get(@DefaultValue("false") @QueryParam("unprocessedOnly") boolean unprocessedOnly);
 }
