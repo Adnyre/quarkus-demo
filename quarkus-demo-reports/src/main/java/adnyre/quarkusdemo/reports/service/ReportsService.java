@@ -49,6 +49,7 @@ public class ReportsService {
             throw new RuntimeException("Unable to find jobs", e);
         }
         return jobs.stream()
+                .filter(job -> job.getAssignee() != null)
                 .collect(Collectors.groupingBy(
                         job -> job.getAssignee().getFullName())
                 )
