@@ -10,6 +10,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Path("/")
@@ -21,6 +22,7 @@ public class ReportsController {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response healthCheck() {
+        System.out.println(new SimpleDateFormat("HH:mm:ss.SSS").format(new java.util.Date(System.currentTimeMillis())));
         return Response.ok("Ok", MediaType.TEXT_PLAIN).build();
     }
 
