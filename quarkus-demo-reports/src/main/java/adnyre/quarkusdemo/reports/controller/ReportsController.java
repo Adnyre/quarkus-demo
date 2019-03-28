@@ -19,10 +19,15 @@ public class ReportsController {
     @Inject
     ReportsService reportsService;
 
+    private boolean pinged = false;
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response healthCheck() {
-        System.out.println(new SimpleDateFormat("HH:mm:ss.SSS").format(new java.util.Date(System.currentTimeMillis())));
+        if (!pinged) {
+            System.out.println(new SimpleDateFormat("HH:mm:ss.SSS").format(new java.util.Date(System.currentTimeMillis())));
+        }
+        pinged = true;
         return Response.ok("Ok", MediaType.TEXT_PLAIN).build();
     }
 

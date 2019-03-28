@@ -23,10 +23,15 @@ public class ReportsController {
     @Autowired
     private ReportsService reportsService;
 
+    private boolean pinged = false;
+
     @GetMapping(value = "", produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseStatus(code = HttpStatus.OK)
     public String healthCheck() {
-        logger.warn(new SimpleDateFormat("HH:mm:ss.SSS").format(new java.util.Date(System.currentTimeMillis())));
+        if (!pinged) {
+            logger.warn(new SimpleDateFormat("HH:mm:ss.SSS").format(new java.util.Date(System.currentTimeMillis())));
+        }
+        pinged = true;
         return "Ok";
     }
 
